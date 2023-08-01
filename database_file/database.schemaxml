@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemadesigner version="6.5">
+<source>
+<database charset="utf8mb4" collation="utf8mb4_general_ci">printifyzz</database>
+</source>
+<canvas zoom="100">
+<tables>
+<table name="languages" view="standard">
+<left>1959</left>
+<top>227</top>
+<width>285</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `languages` (
+  `language_id` int(11) NOT NULL AUTO_INCREMENT,
+  `language` varchar(100) NOT NULL,
+  `status` enum('Active','InActive') NOT NULL,
+  PRIMARY KEY (`language_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="orders" view="standard">
+<left>584</left>
+<top>243</top>
+<width>279</width>
+<height>163</height>
+<sql_create_table>CREATE TABLE `orders` (
+  `order` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) DEFAULT NULL,
+  `quantity` decimal(25,0) NOT NULL,
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `status` enum('Active','InActive') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`order`),
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="product_image_orientation" view="standard">
+<left>1654</left>
+<top>373</top>
+<width>284</width>
+<height>146</height>
+<sql_create_table>CREATE TABLE `product_image_orientation` (
+  `product_image_orientation_id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) DEFAULT NULL,
+  `product_image_id` int(11) DEFAULT NULL,
+  `image_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`product_image_orientation_id`),
+  KEY `product_id` (`product_id`),
+  KEY `product_image_id` (`product_image_id`),
+  KEY `image_id` (`image_id`),
+  CONSTRAINT `product_image_orientation_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `product_image_orientation_ibfk_2` FOREIGN KEY (`product_image_id`) REFERENCES `product_images` (`product_image_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `product_image_orientation_ibfk_3` FOREIGN KEY (`image_id`) REFERENCES `images` (`image_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="product_images" view="standard">
+<left>1309</left>
+<top>473</top>
+<width>318</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `product_images` (
+  `product_image_id` int(11) NOT NULL AUTO_INCREMENT,
+  `image_style` varchar(100) NOT NULL,
+  `status` enum('Active','InActive') DEFAULT 'Active',
+  PRIMARY KEY (`product_image_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="products" view="standard">
+<left>1097</left>
+<top>280</top>
+<width>328</width>
+<height>163</height>
+<sql_create_table>CREATE TABLE `products` (
+  `product_id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_name` varchar(100) NOT NULL,
+  `product_description` longtext NOT NULL,
+  `product_price` decimal(25,0) NOT NULL,
+  `status` enum('Active','InActive') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="items" view="standard">
+<left>317</left>
+<top>435</top>
+<width>238</width>
+<height>146</height>
+<sql_create_table>CREATE TABLE `items` (
+  `item_order_id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `product_customize_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`item_order_id`),
+  KEY `order_id` (`order_id`),
+  KEY `product_customize_id` (`product_customize_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `items_ibfk_2` FOREIGN KEY (`product_customize_id`) REFERENCES `product_customizies` (`product_customize_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `items_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="images" view="standard">
+<left>1971</left>
+<top>450</top>
+<width>290</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `images` (
+  `image_id` int(11) NOT NULL AUTO_INCREMENT,
+  `image_name` varchar(100) NOT NULL,
+  `status` enum('Active','InActive') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`image_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="product_customizies" view="standard">
+<left>640</left>
+<top>462</top>
+<width>340</width>
+<height>146</height>
+<sql_create_table>CREATE TABLE `product_customizies` (
+  `product_customize_id` int(11) NOT NULL AUTO_INCREMENT,
+  `setting_key` longtext NOT NULL,
+  `setting_value` longtext NOT NULL,
+  `status` enum('Active','InActive') DEFAULT 'Active',
+  PRIMARY KEY (`product_customize_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="users" view="standard">
+<left>5</left>
+<top>353</top>
+<width>287</width>
+<height>248</height>
+<sql_create_table>CREATE TABLE `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(100) NOT NULL,
+  `middle_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `gender` enum('Male','Female') NOT NULL DEFAULT 'Male',
+  `email` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `address` longtext NOT NULL,
+  `phone_number` varchar(100) NOT NULL,
+  `profile_image` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="assign_user_roles" view="standard">
+<left>314</left>
+<top>201</top>
+<width>228</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `assign_user_roles` (
+  `assign_user_role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`assign_user_role_id`),
+  KEY `role_id` (`role_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `assign_user_roles_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`role_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `assign_user_roles_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="roles" view="standard">
+<left>21</left>
+<top>12</top>
+<width>270</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `roles` (
+  `role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_type` varchar(100) NOT NULL,
+  `status` enum('Active','InActive') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="category" view="standard">
+<left>1709</left>
+<top>35</top>
+<width>305</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `category` (
+  `category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_name` varchar(100) NOT NULL,
+  `status` enum('Active','InActive') NOT NULL DEFAULT 'Active',
+  PRIMARY KEY (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="category_subcategory_brigh" view="standard">
+<left>2068</left>
+<top>39</top>
+<width>284</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `category_subcategory_brigh` (
+  `category_subcategory_brigh_id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) DEFAULT NULL,
+  `sub_category_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`category_subcategory_brigh_id`),
+  KEY `category_id` (`category_id`),
+  KEY `sub_category_id` (`sub_category_id`),
+  CONSTRAINT `category_subcategory_brigh_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `category_subcategory_brigh_ibfk_2` FOREIGN KEY (`sub_category_id`) REFERENCES `sub_category` (`sub_category_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="product_category" view="standard">
+<left>1442</left>
+<top>27</top>
+<width>231</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `product_category` (
+  `product_category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`product_category_id`),
+  KEY `product_id` (`product_id`),
+  KEY `category_id` (`category_id`),
+  CONSTRAINT `product_category_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `product_category_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="sub_category" view="standard">
+<left>2375</left>
+<top>168</top>
+<width>267</width>
+<height>112</height>
+<sql_create_table>CREATE TABLE `sub_category` (
+  `sub_category_id` int(11) NOT NULL AUTO_INCREMENT,
+  `sub_category_name` varchar(100) NOT NULL,
+  PRIMARY KEY (`sub_category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+<table name="product_language_type" view="standard">
+<left>1594</left>
+<top>198</top>
+<width>265</width>
+<height>129</height>
+<sql_create_table>CREATE TABLE `product_language_type` (
+  `product_language_type_id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) DEFAULT NULL,
+  `language_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`product_language_type_id`),
+  KEY `language_id` (`language_id`),
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `product_language_type_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `languages` (`language_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `product_language_type_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci</sql_create_table>
+</table>
+</tables>
+</canvas>
+</schemadesigner>
